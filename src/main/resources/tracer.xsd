@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://github.com/smmckay/tracer-m" xmlns="http://github.com/smmckay/tracer-m">
+    <xs:element name="tracer">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="output" minOccurs="0" maxOccurs="1" type="output"/>
+                <xs:element name="instrument" minOccurs="1" maxOccurs="unbounded" type="instrument"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="output">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element name="file" type="namedOutput"/>
+            <xs:element name="logger" type="namedOutput"/>
+        </xs:choice>
+        <xs:attribute name="stderr" use="optional" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="namedOutput">
+        <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="instrument">
+        <xs:attribute name="class" use="required" type="xs:string"/>
+        <xs:attribute name="method" use="required" type="xs:string"/>
+        <xs:attribute name="dumpStack" use="optional" type="xs:boolean" default="false"/>
+        <xs:attribute name="dumpThis" use="optional" type="xs:boolean" default="false"/>
+        <xs:attribute name="dumpMembers" use="optional" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>

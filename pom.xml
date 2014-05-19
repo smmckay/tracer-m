@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>b.abbies.us</groupId>
+    <artifactId>tracer-m</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <url>http://github.com/smmckay/tracer-m</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/smmckay/tracer-m</connection>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>Steve McKay</name>
+            <email>steve@b.abbies.us</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <version>5.0.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <version>0.9.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <generatePackage>us.abbies.b.tracerm.jaxb</generatePackage>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>standalone</shadedClassifierName>
+                            <relocations>
+                                <relocation>
+                                    <pattern>org.ow2.asm</pattern>
+                                    <shadedPattern>us.abbies.b.asm</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>us.abbies.b.tracerm.Main</Main-Class>
+                                        <Premain-Class>us.abbies.b.tracerm.AgentMain</Premain-Class>
+                                        <Agent-Class>us.abbies.b.tracerm.AgentMain</Agent-Class>
+                                        <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
