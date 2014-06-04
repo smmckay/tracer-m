@@ -1,18 +1,16 @@
 package us.abbies.b.tracerm;
 
-import us.abbies.b.tracerm.jaxb.Instrument;
-import us.abbies.b.tracerm.jaxb.NamedOutput;
-import us.abbies.b.tracerm.jaxb.Output;
 import us.abbies.b.tracerm.jaxb.Tracer;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -135,51 +133,17 @@ public class Main {
     }
 
     private static void printHelp() {
-
+        throw new RuntimeException("Not implemented");
     }
 
     private static String parseXmlDef(String xmlPath) {
-        StringBuilder defBuilder = new StringBuilder();
         try {
             JAXBContext context = JAXBContext.newInstance(Tracer.class);
-            Tracer tracer = (Tracer) context.createUnmarshaller().unmarshal(new File(xmlPath));
-
-            Output output = tracer.getOutput();
-            if (output == null) {
-                defBuilder.append("stderr\0");
-            } else {
-                if (output.isStderr()) {
-                    defBuilder.append("stderr\0");
-                }
-                for (JAXBElement<NamedOutput> elem : output.getFileOrLogger()) {
-                    defBuilder.append(elem.getName().getLocalPart())
-                            .append('=')
-                            .append(elem.getValue().getName())
-                            .append('\0');
-                }
-            }
-            defBuilder.append('\0');
-
-            for (Instrument i : tracer.getInstrument()) {
-                defBuilder.append(i.getClazz())
-                        .append('\0')
-                        .append(i.getMethod())
-                        .append('\0');
-                if (i.isDumpStack()) {
-                    defBuilder.append("dumpStack\0");
-                }
-                if (i.isDumpThis()) {
-                    defBuilder.append("dumpThis\0");
-                }
-                String dumpMembers = i.getDumpMembers();
-                if (dumpMembers != null) {
-                    defBuilder.append("dumpMembers=").append(dumpMembers).append('\0');
-                }
-                defBuilder.append('\0');
-            }
+            context.createUnmarshaller().unmarshal(new File(xmlPath));
+            return new String(Files.readAllBytes(Paths.get(xmlPath)), StandardCharsets.UTF_8);
         } catch (Exception e) {
             printErr("Unable to load " + xmlPath + ": " + e);
+            throw new RuntimeException("BUG");
         }
-        return defBuilder.toString();
     }
 }
