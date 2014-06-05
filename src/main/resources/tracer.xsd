@@ -24,6 +24,7 @@
     <xs:complexType name="instrument">
         <xs:attribute name="class" use="required" type="xs:string"/>
         <xs:attribute name="method" use="required" type="xs:string"/>
+        <xs:attribute name="retransform" use="optional" type="xs:boolean" default="true"/>
         <xs:attribute name="dumpStack" use="optional" type="xs:boolean" default="false"/>
         <xs:attribute name="dumpThis" use="optional" type="xs:boolean" default="false"/>
         <xs:attribute name="dumpMembers" use="optional" type="xs:string"/>

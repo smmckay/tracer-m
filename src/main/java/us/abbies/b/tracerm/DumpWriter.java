@@ -48,6 +48,13 @@ public class DumpWriter {
             repr = Arrays.toString((double[]) o);
         } else if (o instanceof boolean[]) {
             repr = Arrays.toString((boolean[]) o);
+        } else if (o instanceof Throwable) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(o);
+            for (StackTraceElement ste : ((Throwable) o).getStackTrace()) {
+                sb.append("\t at ").append(ste);
+            }
+            repr = sb.toString();
         } else {
             repr = Objects.toString(o);
         }
