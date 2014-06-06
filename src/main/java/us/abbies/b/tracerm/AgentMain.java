@@ -11,9 +11,7 @@ import java.io.*;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,11 +54,11 @@ public class AgentMain {
 
     private static ClassFileTransformer makeTransformer(Instrument i) {
         String dmStr = i.getDumpMembers();
-        List<String> dumpMembers;
+        Set<String> dumpMembers;
         if (dmStr == null || dmStr.isEmpty()) {
-            dumpMembers = Collections.emptyList();
+            dumpMembers = Collections.emptySet();
         } else {
-            dumpMembers = new ArrayList<>();
+            dumpMembers = new HashSet<>();
             for (String dm : dmStr.split(",")) {
                 if (!dm.isEmpty()) {
                     dumpMembers.add(dm);
