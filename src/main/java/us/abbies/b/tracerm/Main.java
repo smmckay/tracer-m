@@ -98,11 +98,11 @@ public class Main {
         } catch (ClassNotFoundException e) {
             printErr("Unable to load com.sun.tools.attach.VirtualMachine. Make sure you're using OpenJDK/Oracle JDK.");
         } catch (NoSuchMethodException e) {
-            printErr("Unable to find VirtualMachine.attach(String). Make sure you're using OpenJDK/Oracle JDK.");
+            printErr("Unable to find com.sun.tools.attach.VirtualMachine.attach(String). Make sure you're using OpenJDK/Oracle JDK.");
         } catch (InvocationTargetException e) {
             printErr("Attaching to " + pid + " failed: " + e.getCause());
         } catch (IllegalAccessException e) {
-            printErr("VirtualMachine.attach(String) isn't accessible. Make sure you're using OpenJDK/Oracle JDK.");
+            printErr("com.sun.tools.attach.VirtualMachine.attach(String) isn't accessible. Make sure you're using OpenJDK/Oracle JDK.");
         }
     }
 

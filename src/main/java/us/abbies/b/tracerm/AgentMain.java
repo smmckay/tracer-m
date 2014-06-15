@@ -21,15 +21,15 @@ public class AgentMain {
     public static DumpWriter out;
 
     public static void premain(String agentArgs, Instrumentation inst) {
-        init(agentArgs, inst, false);
+        init(agentArgs, inst);
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public static void agentmain(String agentArgs, Instrumentation inst) {
-        init(agentArgs, inst, true);
+        init(agentArgs, inst);
     }
 
-    private static void init(String agentArgs, Instrumentation inst, boolean allowRetransform) {
+    private static void init(String agentArgs, Instrumentation inst) {
         try {
             Tracer tracer = loadTracer(agentArgs);
             Output output = tracer.getOutput();
@@ -39,7 +39,7 @@ public class AgentMain {
             for (Instrument i : tracer.getInstrument()) {
                 ClassFileTransformer t = makeTransformer(i);
                 inst.addTransformer(t, true);
-                if (allowRetransform && i.isRetransform()) {
+                if (i.isRetransform()) {
                     classesToRetransform.add(Class.forName(i.getClazz()));
                 }
             }
