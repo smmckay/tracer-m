@@ -15,9 +15,9 @@ public class TraceTransformerIT {
     @DataProvider
     public Object[][] agentArgs() {
         return new Object[][] {
-                {"<tracer><instrument class=\"us.abbies.b.tracerm.testmains.Basic\" method=\"f()V\" dumpThis=\"true\"/></tracer>",
+                {"<tracer><instrument class=\"us.abbies.b.tracerm.testmains.Basic\" method=\"f()V\"><dump><this/></dump></instrument></tracer>",
                         "us.abbies.b.tracerm.testmains.Basic",
-                        "woo" + System.lineSeparator()}
+                        "woo" + System.lineSeparator()},
         };
     }
 
