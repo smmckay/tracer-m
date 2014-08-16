@@ -1,7 +1,5 @@
 package us.abbies.b.tracerm;
 
-import us.abbies.b.tracerm.jaxb.Tracer;
-
 import javax.xml.bind.JAXBContext;
 import java.io.File;
 import java.io.IOException;
@@ -137,13 +135,6 @@ public class Main {
     }
 
     private static String parseXmlDef(String xmlPath) {
-        try {
-            JAXBContext context = JAXBContext.newInstance(Tracer.class);
-            context.createUnmarshaller().unmarshal(new File(xmlPath));
-            return new String(Files.readAllBytes(Paths.get(xmlPath)), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            printErr("Unable to load " + xmlPath + ": " + e);
-            throw new RuntimeException("BUG");
-        }
+        return "";
     }
 }

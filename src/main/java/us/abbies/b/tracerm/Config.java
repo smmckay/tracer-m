@@ -8,15 +8,42 @@ import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 
 public class Config {
+    @FunctionalInterface
+    public interface XMLEventReaderSupplier {
+        public XMLEventReader get() throws XMLStreamException;
+    }
+
+    public static Config fromString(String configStr) {
+        return fromSupplier(() -> {
+                Reader r = new StringReader(configStr);
+                return XMLInputFactory.newFactory().createXMLEventReader(r);
+        });
+    }
+
+    public static Config fromClasspath(String name) {
+        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
+        if (in == null) {
+            throw new ConfigException("Unable to open classpath:" + name);
+        }
+        return fromInputStream(in);
+    }
+
     public static Config fromInputStream(InputStream in) {
+        return fromSupplier(() -> XMLInputFactory.newFactory().createXMLEventReader(in));
+    }
+
+    public static Config fromSupplier(XMLEventReaderSupplier s) {
         try {
-            XMLEventReader er = XMLInputFactory.newFactory().createXMLEventReader(in);
+            XMLEventReader er = s.get();
             try {
                 return loadConfig(er);
             } finally {
@@ -47,6 +74,9 @@ public class Config {
                 }
             } else if (tag.isEndElement()) {
                 if ("tracer".equals(tag.asEndElement().getName().getLocalPart())) {
+                    if (instruments.size() == 0) {
+                        throw new ConfigException("Expected at least one instrument element");
+                    }
                     return new Config(instruments);
                 }
             }

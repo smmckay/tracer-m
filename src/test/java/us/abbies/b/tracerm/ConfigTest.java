@@ -10,8 +10,7 @@ import static org.hamcrest.Matchers.*;
 
 public class ConfigTest {
     private static Config loadFromClasspath(String name) {
-        InputStream in = ConfigTest.class.getResourceAsStream(name);
-        return Config.fromInputStream(in);
+        return Config.fromClasspath("us/abbies/b/tracerm/" + name);
     }
 
     @Test
@@ -26,12 +25,21 @@ public class ConfigTest {
         assertThat(c.getInstruments().get(1).getTargetClass(), is("us.abbies.b.tracerm.testmains.Complex"));
     }
 
+    @Test
+    public void testLoadFromString() {
+        Config c = Config.fromString("<tracer><instrument targetClass=\"us.abbies.b.tracerm.testmains.Basic\"/></tracer>");
+        assertThat(c.getInstruments(), hasSize(1));
+        assertThat(c.getInstruments().get(0).getTargetClass(), is("us.abbies.b.tracerm.testmains.Basic"));
+    }
+
     @DataProvider
     public Object[][] failureMessages() {
         return new Object[][] {
                 {"config3.xml", "Missing attribute targetClass on element instrument"},
                 {"config4.xml", "Expected tracer element, got html"},
-                {"config5.xml", "Unknown element test"}
+                {"config5.xml", "Unknown element test"},
+                {"config6.xml", "Expected at least one instrument element"},
+                {"config-missing.xml", "Unable to open classpath:us/abbies/b/tracerm/config-missing.xml"}
         };
     }
 
