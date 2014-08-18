@@ -1,0 +1,3 @@
+<tracer>
+    <instrument targetClass="us.abbies.b.tracerm.testmains.Basic" targetMethod="f()V"/>
+</tracer>
