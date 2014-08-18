@@ -1,4 +1,8 @@
 <tracer>
-    <instrument targetClass="us.abbies.b.tracerm.testmains.Basic"/>
-    <instrument targetClass="us.abbies.b.tracerm.testmains.Complex"/>
+    <instrument targetClass="us.abbies.b.tracerm.testmains.Basic" targetMethod="f()V">
+        <transformer>DumpThis</transformer>
+    </instrument>
+    <instrument targetClass="us.abbies.b.tracerm.testmains.Complex" targetMethod="f()V">
+        <transformer>DumpThis</transformer>
+    </instrument>
 </tracer>
