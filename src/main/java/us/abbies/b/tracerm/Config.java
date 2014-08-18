@@ -13,7 +13,6 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 
 public class Config {
@@ -84,12 +83,17 @@ public class Config {
     }
 
     private static Instrument loadInstrument(StartElement se) {
-        Attribute targetAttr = se.getAttributeByName(new QName("targetClass"));
-        if (targetAttr == null) {
-            throw new ConfigException("Missing attribute targetClass on element instrument");
+        String targetClass = getAttr(se, "targetClass");
+        String targetMethod = getAttr(se, "targetMethod");
+        return new Instrument(targetClass, targetMethod);
+    }
+
+    private static String getAttr(StartElement se, String attrName) {
+        Attribute attr = se.getAttributeByName(new QName(attrName));
+        if (attr == null) {
+            throw new ConfigException("Missing attribute " + attrName + " on element " + se.getName().getLocalPart());
         }
-        String targetClass = targetAttr.getValue();
-        return new Instrument(targetClass);
+        return attr.getValue();
     }
 
     private final List<Instrument> instruments;
@@ -100,13 +104,19 @@ public class Config {
 
     public static class Instrument {
         private final String targetClass;
+        private final String targetMethod;
 
-        public Instrument(String targetClass) {
+        public Instrument(String targetClass, String targetMethod) {
             this.targetClass = targetClass;
+            this.targetMethod = targetMethod;
         }
 
         public String getTargetClass() {
             return targetClass;
+        }
+
+        public String getTargetMethod() {
+            return targetMethod;
         }
     }
 

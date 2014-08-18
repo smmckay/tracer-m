@@ -18,18 +18,22 @@ public class ConfigTest {
         Config c = loadFromClasspath("config1.xml");
         assertThat(c.getInstruments(), hasSize(1));
         assertThat(c.getInstruments().get(0).getTargetClass(), is("us.abbies.b.tracerm.testmains.Basic"));
+        assertThat(c.getInstruments().get(0).getTargetMethod(), is("f()V"));
 
         c = loadFromClasspath("config2.xml");
         assertThat(c.getInstruments(), hasSize(2));
         assertThat(c.getInstruments().get(0).getTargetClass(), is("us.abbies.b.tracerm.testmains.Basic"));
+        assertThat(c.getInstruments().get(0).getTargetMethod(), is("f()V"));
         assertThat(c.getInstruments().get(1).getTargetClass(), is("us.abbies.b.tracerm.testmains.Complex"));
+        assertThat(c.getInstruments().get(1).getTargetMethod(), is("f()V"));
     }
 
     @Test
     public void testLoadFromString() {
-        Config c = Config.fromString("<tracer><instrument targetClass=\"us.abbies.b.tracerm.testmains.Basic\"/></tracer>");
+        Config c = Config.fromString("<tracer><instrument targetClass=\"us.abbies.b.tracerm.testmains.Basic\" targetMethod=\"f()V\"/></tracer>");
         assertThat(c.getInstruments(), hasSize(1));
         assertThat(c.getInstruments().get(0).getTargetClass(), is("us.abbies.b.tracerm.testmains.Basic"));
+        assertThat(c.getInstruments().get(0).getTargetMethod(), is("f()V"));
     }
 
     @DataProvider
@@ -39,6 +43,7 @@ public class ConfigTest {
                 {"config4.xml", "Expected tracer element, got html"},
                 {"config5.xml", "Unknown element test"},
                 {"config6.xml", "Expected at least one instrument element"},
+                {"config7.xml", "Missing attribute targetMethod on element instrument"},
                 {"config-missing.xml", "Unable to open classpath:us/abbies/b/tracerm/config-missing.xml"}
         };
     }
